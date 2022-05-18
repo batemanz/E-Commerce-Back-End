@@ -29,10 +29,22 @@ router.get("/:id", (req, res) => {
 
 router.post("/", (req, res) => {
   // create a new category
+  Category.post({
+    where: {
+      id: req.params.id,
+    },
+
+  })
 });
 
 router.put("/:id", (req, res) => {
   // update a category by its `id` value
+  Category.put({
+    where: {
+      id: req.params.id,
+    },
+    
+  })
 });
 
 router.delete("/:id", (req, res) => {
