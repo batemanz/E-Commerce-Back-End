@@ -5,9 +5,12 @@ const { Category, Product } = require("../../models");
 
 router.get("/", (req, res) => {
   Category.findAll({
-    include: [Product],
+    include: {
+      model: Product,
+      attributes: ["id", "product_name", "price", "stock", "category_id"],
+    },
   })
-    .then((categories) => res.json(categories))
+    .then((categoryData) => res.json(categoryData))
     .catch((err) => res.status(500).json(err));
 
   // find all categories
@@ -19,32 +22,35 @@ router.get("/:id", (req, res) => {
     where: {
       id: req.params.id,
     },
-    include: [Product],
+    include: {
+      model: Product,
+      attributes: ["id", "product_name", "price", "stock", "category_id"],
+    },
   })
-    .then((category) => res.json(category))
-    .catch((err) => res.status(400).json(err));
+    .then((categoryData) => res.json(categoryData))
+    .catch((err) => res.status(500).json(err));
   // find one category by its `id` value
   // be sure to include its associated Products
 });
 
 router.post("/", (req, res) => {
   // create a new category
-  Category.post({
-    where: {
-      id: req.params.id,
-    },
-
+  Category.create({
+    category_name: req.body.category_name,
   })
+    .then((categoryData) => res.json(categoryData))
+    .catch((err) => res.status(500).json(err));
 });
 
 router.put("/:id", (req, res) => {
   // update a category by its `id` value
-  Category.put({
+  Category.update(req.body, {
     where: {
       id: req.params.id,
     },
-    
   })
+    .then((categoryData) => res.json(categoryData))
+    .catch((err) => res.status(500).json(err));
 });
 
 router.delete("/:id", (req, res) => {
@@ -54,7 +60,7 @@ router.delete("/:id", (req, res) => {
       id: req.params.id,
     },
   })
-    .then((category) => res.status(200).json(category))
+    .then((categoryData) => res.status(200).json(categoryData))
     .catch((err) => res.status(400).json(err));
 });
 
